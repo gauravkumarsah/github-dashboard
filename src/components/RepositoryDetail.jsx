@@ -11,28 +11,24 @@ const RepositoryDetail = () => {
 
   const fetchRepositoryData = async () => {
     try {
-      // Fetch repository details
       const repositoryResponse = await fetch(
         `${GITHUB_REPOS_URL}${username}/${repoName}`
       );
       const repositoryData = await repositoryResponse.json();
       setRepository(repositoryData);
 
-      // Fetch README file
       const readmeResponse = await fetch(
         `${GITHUB_REPOS_URL}${username}/${repoName}/readme`
       );
       const readmeData = await readmeResponse.json();
       setReadme(atob(readmeData.content)); // Decode Base64 content
 
-      // Fetch recent commits
       const commitsResponse = await fetch(
         `${GITHUB_REPOS_URL}${username}/${repoName}/commits`
       );
       const commitsData = await commitsResponse.json();
       setCommits(commitsData);
 
-      // Fetch open issues
       const issuesResponse = await fetch(
         `${GITHUB_REPOS_URL}${username}/${repoName}/issues`
       );
@@ -49,30 +45,43 @@ const RepositoryDetail = () => {
   }, [username, repoName]);
 
   if (!repository) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-dvh flex items-center justify-center">
+        <div className="text-center p-4 text-gray-500">Loading...</div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <div>
-        <Link to={`/user/${username}`}>Back to RepositoryTable</Link>
+    <div className="bg-gray-100 p-4 h-dvh">
+      <div className="mb-4">
+        <Link
+          to={`/user/${username}`}
+          className="flex items-center text-blue-500"
+        >
+          <span className="mb-2">&#8592;</span>
+          <p className=" hover:underline">Back to RepositoryTable</p>
+        </Link>
       </div>
-      <h2>{repository.name} Details</h2>
-      <div>
-        <h3>README</h3>
+      <h2 className="text-2xl font-bold mb-4">{repository.name} Details</h2>
+
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold">README</h3>
         <div>{readme}</div>
       </div>
-      <div>
-        <h3>Recent Commits</h3>
-        <ul>
+
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold">Recent Commits</h3>
+        <ul className="list-decimal ml-4">
           {commits.map((commit) => (
             <li key={commit.sha}>{commit.commit.message}</li>
           ))}
         </ul>
       </div>
-      <div>
-        <h3>Open Issues</h3>
-        <ul>
+
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold">Open Issues</h3>
+        <ul className="list-decimal ml-4">
           {issues.map((issue) => (
             <li key={issue.id}>{issue.title}</li>
           ))}
