@@ -3,6 +3,8 @@ import { GITHUB_USERS_DETAILS_URL } from '../constants/constants';
 
 const RepositoryTable = ({ username }) => {
   const [repositories, setRepositories] = useState([]);
+  const [sortType, setSortType] = useState('name');
+  const [sortDirection, setSortDirection] = useState('asc');
 
   useEffect(() => {
     const url = `${GITHUB_USERS_DETAILS_URL}${username}/repos`;
@@ -21,21 +23,51 @@ const RepositoryTable = ({ username }) => {
     }
   }, [username]);
 
+  const sortRepositories = (type) => {
+    if (type === sortType) {
+      setSortDirection((prevDirection) =>
+        prevDirection === 'asc' ? 'desc' : 'asc'
+      );
+    } else {
+      setSortType(type);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortedRepositories = () => {
+    return [...repositories].sort((a, b) => {
+      const factor = sortDirection === 'asc' ? 1 : -1;
+
+      if (sortType === 'name') {
+        return factor * a.name.localeCompare(b.name);
+      } else if (sortType === 'stars') {
+        return factor * (a.stargazers_count - b.stargazers_count);
+      } else if (sortType === 'forks') {
+        return factor * (a.forks_count - b.forks_count);
+      } else if (sortType === 'issues') {
+        return factor * (a.open_issues_count - b.open_issues_count);
+      }
+
+      return 0;
+    });
+  };
+
+  const sortedRepositories = getSortedRepositories();
+
   return (
     <div>
       <h2>Repositories for {username}</h2>
+      <div>
+        <button onClick={() => sortRepositories('name')}>Sort by Name</button>
+        <button onClick={() => sortRepositories('stars')}>Sort by Stars</button>
+        <button onClick={() => sortRepositories('forks')}>Sort by Forks</button>
+        <button onClick={() => sortRepositories('issues')}>
+          Sort by Open Issues
+        </button>
+      </div>
       <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Stars</th>
-            <th>Forks</th>
-            <th>Open Issues</th>
-          </tr>
-        </thead>
         <tbody>
-          {repositories.map((repo) => (
+          {sortedRepositories.map((repo) => (
             <tr key={repo.id}>
               <td>{repo.name}</td>
               <td>{repo.description}</td>
