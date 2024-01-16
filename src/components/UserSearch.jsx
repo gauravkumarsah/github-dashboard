@@ -19,7 +19,7 @@ const UserSearch = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-3xl py-12 shadow-md w-full md:w-1/2 lg:w-1/3">
+      <div className="bg-white p-8 rounded-3xl py-12 shadow-md w-full md:w-1/2 lg:w-1/3  mx-4">
         <h2 className="text-3xl font-semibold mb-4 text-center mb-12">
           User Search
         </h2>

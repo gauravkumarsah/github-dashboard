@@ -7,7 +7,7 @@ import RepositoryDetail from './components/RepositoryDetail';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="">
         <Routes>
           <Route path="/" element={<UserSearch />} />
           <Route path="/user/:username" element={<UserProfile />} />

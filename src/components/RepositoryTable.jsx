@@ -87,7 +87,7 @@ const RepositoryTable = ({ username }) => {
   return (
     <div className="bg-gray-100 p-4">
       <h2 className="text-2xl font-bold mb-4">Repositories for {username}</h2>
-      <div className="flex mb-4 gap-4">
+      <div className="flex flex-col md:flex-row mb-4 gap-4">
         <input
           type="text"
           className="p-2 border border-gray-300 rounded-md focus:outline-none"
@@ -120,56 +120,58 @@ const RepositoryTable = ({ username }) => {
           Sort by Open Issues
         </button>
       </div>
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-blue-500 text-white">
-            <th className="p-2">Name</th>
-            <th className="p-2">Description</th>
-            <th className="p-2">Stars</th>
-            <th className="p-2">Forks</th>
-            <th className="p-2">Open Issues</th>
-            <th className="p-2"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRepositories.map((repo) => (
-            <tr
-              key={repo.id}
-              className="hover:bg-gray-200 cursor-pointer"
-              onClick={() => handleRepositoryClick(repo.name)}
-            >
-              <td className="p-2">{repo.name}</td>
-              <td className="p-2">{repo.description}</td>
-              <td className="p-2">{repo.stargazers_count}</td>
-              <td className="p-2">{repo.forks_count}</td>
-              <td className="p-2">{repo.open_issues_count}</td>
-              <td className="p-2">
-                <Link
-                  to={`/${username}/${repo.name}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  Details
-                </Link>
-              </td>
+      <div className=" overflow-x-scroll">
+        <table className="w-min  lg:w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="p-2">Name</th>
+              <th className="p-2">Description</th>
+              <th className="p-2">Stars</th>
+              <th className="p-2">Forks</th>
+              <th className="p-2">Open Issues</th>
+              <th className="p-2"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {selectedRepo && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold">
-            Contributors for {selectedRepo}
-          </h3>
-          <ul className="list-decimal ml-4">
-            {contributors.map((contributor) => (
-              <li key={contributor.id} className="mb-2">
-                <strong>{contributor.login}</strong> - Contributions:{' '}
-                {contributor.contributions}
-              </li>
+          </thead>
+          <tbody>
+            {filteredRepositories.map((repo) => (
+              <tr
+                key={repo.id}
+                className="hover:bg-gray-200 cursor-pointer"
+                onClick={() => handleRepositoryClick(repo.name)}
+              >
+                <td className="p-2">{repo.name}</td>
+                <td className="p-2">{repo.description}</td>
+                <td className="p-2">{repo.stargazers_count}</td>
+                <td className="p-2">{repo.forks_count}</td>
+                <td className="p-2">{repo.open_issues_count}</td>
+                <td className="p-2">
+                  <Link
+                    to={`/${username}/${repo.name}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Details
+                  </Link>
+                </td>
+              </tr>
             ))}
-          </ul>
-        </div>
-      )}
+          </tbody>
+        </table>
+        {selectedRepo && (
+          <div className="my-4 py-4">
+            <h3 className="text-lg font-semibold">
+              Contributors for {selectedRepo}
+            </h3>
+            <ul className="list-decimal ml-4">
+              {contributors.map((contributor) => (
+                <li key={contributor.id} className="mb-2">
+                  <strong>{contributor.login}</strong> - Contributions:{' '}
+                  {contributor.contributions}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
