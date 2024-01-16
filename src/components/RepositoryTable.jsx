@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   GITHUB_REPOS_URL,
   GITHUB_USERS_DETAILS_URL,
@@ -118,6 +119,9 @@ const RepositoryTable = ({ username }) => {
               <td>{repo.stargazers_count}</td>
               <td>{repo.forks_count}</td>
               <td>{repo.open_issues_count}</td>
+              <td>
+                <Link to={`/${username}/${repo.name}`}>Details</Link>
+              </td>
             </tr>
           ))}
         </tbody>
