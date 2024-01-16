@@ -19,7 +19,7 @@ const UserSearch = () => {
 
   return (
     <div>
-      <h2>User Search</h2>
+      <h2 className=''>User Search</h2>
       <SearchBar onSearch={handleSearch} />
       <ul>
         {searchResults.map((user) => (

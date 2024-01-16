@@ -9,7 +9,6 @@ const RepositoryDetail = () => {
   const [commits, setCommits] = useState([]);
   const [issues, setIssues] = useState([]);
 
-  console.log(username, repoName);
   const fetchRepositoryData = async () => {
     try {
       // Fetch repository details
@@ -61,7 +60,7 @@ const RepositoryDetail = () => {
       <h2>{repository.name} Details</h2>
       <div>
         <h3>README</h3>
-        <div dangerouslySetInnerHTML={{ __html: readme }}></div>
+        <div>{readme}</div>
       </div>
       <div>
         <h3>Recent Commits</h3>
