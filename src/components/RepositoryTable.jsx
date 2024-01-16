@@ -3,6 +3,7 @@ import { GITHUB_USERS_DETAILS_URL } from '../constants/constants';
 
 const RepositoryTable = ({ username }) => {
   const [repositories, setRepositories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
 
@@ -25,9 +26,7 @@ const RepositoryTable = ({ username }) => {
 
   const sortRepositories = (type) => {
     if (type === sortType) {
-      setSortDirection((prevDirection) =>
-        prevDirection === 'asc' ? 'desc' : 'asc'
-      );
+      setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortType(type);
       setSortDirection('asc');
@@ -52,22 +51,28 @@ const RepositoryTable = ({ username }) => {
     });
   };
 
-  const sortedRepositories = getSortedRepositories();
+  const filteredRepositories = getSortedRepositories().filter((repo) =>
+    repo.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
       <h2>Repositories for {username}</h2>
       <div>
+        <input
+          type="text"
+          placeholder="Search by repository name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <button onClick={() => sortRepositories('name')}>Sort by Name</button>
         <button onClick={() => sortRepositories('stars')}>Sort by Stars</button>
         <button onClick={() => sortRepositories('forks')}>Sort by Forks</button>
-        <button onClick={() => sortRepositories('issues')}>
-          Sort by Open Issues
-        </button>
+        <button onClick={() => sortRepositories('issues')}>Sort by Open Issues</button>
       </div>
       <table>
         <tbody>
-          {sortedRepositories.map((repo) => (
+          {filteredRepositories.map((repo) => (
             <tr key={repo.id}>
               <td>{repo.name}</td>
               <td>{repo.description}</td>
