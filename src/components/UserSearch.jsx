@@ -5,15 +5,30 @@ import { GITHUB_USERS_SEARCH_URL } from '../constants/constants';
 
 const UserSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
+  const [onGoingRequest, setOngoingRequest] = useState(false);
 
   const handleSearch = async (username) => {
     const url = `${GITHUB_USERS_SEARCH_URL}?q=${username}`;
+
+    // I am creating a new controller every click
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (onGoingRequest) {
+      setOngoingRequest(false)
+      controller.abort();
+    }
     try {
-      const response = await fetch(url);
+      setOngoingRequest(true)
+      const response = await fetch(url, { signal });
       const data = await response.json();
       setSearchResults(data.items);
     } catch (error) {
       console.error('Error fetching user search results:', error);
+    } finally {
+       // I am Cleaning up the controller when the request is complete
+      setOngoingRequest(false)
+      controller.abort();
     }
   };
 
@@ -29,19 +44,19 @@ const UserSearch = () => {
             <Link
               to={`/user/${user.login}`}
               className="flex items-center bg-white p-4 shadow-md rounded-md"
-              >
-            <li
-              key={user.id}
-              className="flex items-center text-blue-500 hover:underline"
             >
-              <img
-                src={user.avatar_url}
-                alt={`${user.login}'s avatar`}
-                className="w-10 h-10 rounded-full mr-4"
-              />
+              <li
+                key={user.id}
+                className="flex items-center text-blue-500 hover:underline"
+              >
+                <img
+                  src={user.avatar_url}
+                  alt={`${user.login}'s avatar`}
+                  className="w-10 h-10 rounded-full mr-4"
+                />
                 {user.login}
-            </li>
-              </Link>
+              </li>
+            </Link>
           ))}
         </ul>
       </div>
